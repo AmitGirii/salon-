@@ -1,0 +1,92 @@
+# Cut N Curl — static site (Vite build). Apache 2.4 / LiteSpeed (Hostinger).
+#
+# Ships inside dist/ automatically: Vite copies everything in public/ to the
+# build output. Upload the CONTENTS of dist/ to public_html and this file goes
+# with them. Every block is guarded, so a host without a module ignores it.
+
+Options -Indexes
+ServerSignature Off
+
+# ------------------------------------------------------------- content types
+# The two films and the model, in case the host's own table is missing one.
+<IfModule mod_mime.c>
+  AddType video/mp4 .mp4
+  AddType video/webm .webm
+  AddType image/svg+xml .svg
+  AddType image/jpeg .jpg .jpeg
+  AddType image/png .png
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType application/javascript .js .mjs
+  AddType application/json .json
+  AddType model/gltf-binary .glb
+  AddCharset UTF-8 .html .css .js .mjs .json .svg
+</IfModule>
+
+# --------------------------------------------------------------- compression
+# Text only. The films, images and fonts are already compressed.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------- caching
+# assets/ is content-hashed by the build: safe to cache for a year. The films
+# and images keep their names, so a month. index.html is never cached, so a
+# new build is live the moment it is uploaded.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType video/webm "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/avif "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType model/gltf-binary "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|mjs|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(mp4|webm|jpg|jpeg|png|avif|webp|svg|glb)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  # ------------------------------------------------------------- security
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+  # Everything the page loads, and nothing else: its own files (fonts
+  # included — they are self-hosted) and the Google Maps embed on the contact
+  # section. Inline styles are allowed because React writes `style`
+  # attributes; there are no inline scripts. Tested against the built site in
+  # a real browser (see README).
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src 'self'; frame-src https://maps.google.com https://www.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me https://api.whatsapp.com; frame-ancestors 'self'; upgrade-insecure-requests"
+  Header unset X-Powered-By
+</IfModule>
+
+# ----------------------------------------------------------- single page app
+# Any path that is not a real file or folder is the app: serve index.html and
+# let it read the hash. Keeps /#booking and friends working on a cold load.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

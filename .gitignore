@@ -1,0 +1,20 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.env
+.env.*
+!.env.example
+
+# Source media masters (large originals). The web-optimised derivatives
+# committed under public/media/ are generated from these.
+images n videos/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# The upload archive produced by `npm run package`
+*.zip

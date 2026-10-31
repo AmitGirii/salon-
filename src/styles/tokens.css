@@ -1,0 +1,94 @@
+/*
+ * GALLERY WALL PALETTE — change the dark gallery here.
+ *
+ * Scoped to the gallery section, its lightbox, and the navigation while the
+ * gallery is the section on screen (`.nav.is-dark`). The rest of the site
+ * keeps its own ivory/ink/gold tokens below.
+ */
+.gallery-wall,
+.lightbox,
+.nav.is-dark {
+  --bg: #2a1b1d; /* page background, espresso rose */
+  --surface: #3a2628; /* cards and panels, mocha */
+  --gold: #c8a36a; /* accent, from the logo */
+  --gold-soft: #e3c792; /* hover and highlights */
+  --blush: #ebd5cc; /* secondary text */
+  --ivory: #f7efe8; /* main text */
+  --line: rgba(200, 163, 106, 0.28); /* thin gold borders */
+  --font-jost: 'Jost', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/**
+ * DESIGN TOKENS
+ * ---------------------------------------------------------------------------
+ * Sampled from the salon itself: ivory plaster, polished white marble, warm
+ * LED, and the champagne brass on the chair bases. There is no second accent
+ * colour on purpose — the only colour in the real room comes from the polish
+ * wall, and the site follows the same discipline.
+ */
+
+:root {
+  /* --- Surface --- */
+  --ivory: #f4ede3;
+  --ivory-soft: #faf6f0;
+  --ivory-deep: #e9dfd1;
+  --marble: #f8f6f3;
+  --ink: #14110e;
+  --ink-soft: #3b352d;
+  --ink-mute: #7d7367;
+
+  /* --- Metal --- */
+  --gold: #c39a5f;
+  --gold-bright: #e0c08a;
+  --gold-dim: #9c7a44;
+
+  /* --- Light --- */
+  --led: #ffe9c9;
+
+  /* --- Glass panels. Used sparingly: content panels only. --- */
+  --glass-bg: rgba(250, 246, 240, 0.9);
+  --glass-bg-strong: rgba(250, 246, 240, 0.94);
+  --glass-border: rgba(195, 154, 95, 0.22);
+  --glass-blur: 18px;
+
+  --shadow-soft: 0 24px 70px -30px rgba(20, 17, 14, 0.45);
+  --shadow-lift: 0 10px 40px -18px rgba(20, 17, 14, 0.38);
+
+  /* --- Type --- */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-ui: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Fluid display scale — generous, and never cramped on a phone. */
+  --step-hero: clamp(2.9rem, 9vw, 7.5rem);
+  --step-h2: clamp(2rem, 4.6vw, 3.9rem);
+  --step-h3: clamp(1.25rem, 2vw, 1.7rem);
+  --step-body: clamp(0.97rem, 1.05vw, 1.12rem);
+  --step-label: clamp(0.66rem, 0.78vw, 0.76rem);
+
+  /* Kept restrained: Manrope is already open, and heavy tracking on small
+     uppercase reads as decoration rather than as a label. */
+  --tracking-label: 0.15em;
+  --tracking-wide: 0.07em;
+
+  /* --- Rhythm --- */
+  --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  --section-pad: clamp(4.5rem, 11vh, 9rem);
+  --panel-pad: clamp(1.75rem, 3.2vw, 3.4rem);
+  --radius: 2px;
+  --radius-lg: 4px;
+
+  --nav-height: 76px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* Slow out, no overshoot — the title card's house easing. */
+  --ease-cine: cubic-bezier(0.16, 0.84, 0.44, 1);
+
+  /* `only`: the browser may not auto-darken this page (see index.html). */
+  color-scheme: only light;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-height: 62px;
+    --glass-bg: rgba(250, 246, 240, 0.9);
+  }
+}

@@ -1,0 +1,342 @@
+@import './tokens.css';
+
+/* ------------------------------------------------------------------ reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--step-body);
+  font-weight: 400;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/*
+ * The UA rule for [hidden] is display:none at element specificity, so ANY
+ * class that sets display beats it. Components here toggle visibility with the
+ * `hidden` attribute, so it has to win.
+ */
+[hidden] {
+  display: none !important;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------- typography */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+}
+
+.label {
+  font-size: var(--step-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+.lede {
+  font-family: var(--font-display);
+  font-size: var(--step-h3);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.rule {
+  width: 46px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------- app shell */
+
+.app {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* The WebGL / fallback layer sits behind everything and never scrolls. */
+.canvas-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--ivory);
+}
+
+/*
+ * The page owns vertical swipes; two fingers orbit the camera.
+ *
+ * `!important` is load-bearing: react-three-fiber writes `touch-action`
+ * directly onto the canvas as an inline style when it installs its event
+ * handlers, and an inline style beats any selector. Without this the canvas
+ * swallowed one-finger swipes on a phone, so the page could not be scrolled
+ * past the hero at all.
+ */
+.canvas-layer canvas {
+  display: block;
+  touch-action: pan-y !important;
+}
+
+/*
+ * The contained variant: fills whatever positioned box it is placed in.
+ * The 3D room is a viewer inside "The Salon" now, not a layer behind the page.
+ */
+.canvas-layer--contained {
+  position: absolute;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ----------------------------------------------------------- static plate */
+
+.static-salon__plate {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 2.4s var(--ease);
+}
+
+.static-salon__plate.is-active {
+  opacity: 1;
+  animation: kenburns 20s ease-out forwards;
+}
+
+.static-salon__plate.is-still {
+  animation: none;
+  transform: none;
+}
+
+.static-salon__plate.is-still:first-child {
+  opacity: 1;
+}
+
+.static-salon__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 40%, rgba(244, 237, 227, 0) 42%, rgba(20, 17, 14, 0.32) 100%),
+    linear-gradient(180deg, rgba(244, 237, 227, 0.14), rgba(244, 237, 227, 0.06));
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section {
+  position: relative;
+  /* vh first: the fallback where small-viewport units do not exist. */
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--section-pad) var(--gutter);
+  display: flex;
+  /* Anchor jumps must clear the fixed nav, or every heading lands under it. */
+  scroll-margin-top: var(--nav-height);
+}
+
+/* Sections whose job is to show the 3D salon, not to hold copy. */
+.section--showcase {
+  pointer-events: none;
+  padding-bottom: clamp(5rem, 14vh, 9rem);
+}
+
+.section--showcase .section__inner {
+  /* Bottom-aligned rather than centred. */
+  margin-block: auto 0;
+}
+
+.section--showcase .panel {
+  pointer-events: auto;
+}
+
+/*
+ * `margin: auto` rather than `align-items: center`: a flex item taller than
+ * its container centred by alignment gets clipped at the top and cannot be
+ * scrolled to. The full Hair menu is taller than most viewports.
+ */
+.section__inner {
+  width: 100%;
+  max-width: 1320px;
+  margin: auto;
+}
+
+/*
+ * Section reveals. `useReveal` arms each `[data-reveal]` element with
+ * `.reveal-pending` and flips `.is-revealed` once the section is in view; the
+ * motion is a compositor-only transition (see the note in useScrollTimeline).
+ * Timings mirror `ANIM.scroll`: 0.85 s, 26 px, 75 ms stagger. Without script,
+ * or with reduced motion, neither class is ever added and content is simply
+ * visible.
+ */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+.reveal-pending.is-revealed {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.85s var(--ease),
+    transform 0.85s var(--ease);
+  transition-delay: calc(var(--reveal-i, 0) * 75ms);
+}
+
+/*
+ * Content panels. This is the only place glassmorphism appears — the nav and
+ * the mode switcher use it too, and nothing else does. Overusing it turns a
+ * luxury interior into a phone-UI mockup.
+ *
+ * NO BACKDROP BLUR ON THE CONTENT SURFACES, ON ANY DEVICE. A backdrop blur
+ * over a playing video is re-done on every video frame, at device resolution,
+ * once per blurred surface. On a phone (1440×3040 at 3-4× density) that was
+ * several full-screen blurs per frame and the page could not scroll; on a
+ * laptop with an integrated GPU, scrolling past the gallery and team sheets
+ * averaged 47 ms a frame with the blur and 18 ms without. The panels keep
+ * the translucent ivory, a little more opaque than before so the type reads
+ * as it did through the blur, and the film shows through just the same. The
+ * only blurs left are the small ones — the header bar, the view chips — and
+ * on touch devices not even those (see components.css).
+ */
+.panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--panel-pad);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel--narrow {
+  max-width: 560px;
+}
+
+.panel--wide {
+  max-width: 980px;
+}
+
+/*
+ * A full-width sheet for sections whose content is not a single column of
+ * copy — the gallery grid, the team, the 3D viewer, the footer. Slightly
+ * lighter than a panel so the film reads through its edges, and with no
+ * lift shadow: it is a surface the page rests on, not a card floating over it.
+ */
+.panel--sheet {
+  background: rgba(250, 246, 240, 0.88);
+  box-shadow: none;
+}
+
+/* Reveal animation target — GSAP drives these; CSS is only the resting state. */
+.reveal {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------- utilities */
+
+.stack {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.stack--tight {
+  gap: 0.6rem;
+}
+
+.stack--loose {
+  gap: 2rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#14110E" />
+    <!--
+      "only light": this site has one palette, and it is the designer's. Without
+      this, Chrome on Android (Auto Dark Theme) and Samsung Internet (dark mode)
+      recolour a light site on their own — ivory panels turn charcoal, gold
+      turns mud — whenever the phone is in dark mode.
+    -->
+    <meta name="color-scheme" content="only light" />
+
+    <title>Cut N Curl — Salon &amp; Aesthetic, Rewari</title>
+    <meta
+      name="description"
+      content="Cut N Curl is a luxury unisex salon in Model Town, Rewari. Hair, nails, makeup and skin — step inside and book your chair."
+    />
+    <link rel="canonical" href="https://cutncurl.in/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Cut N Curl — Salon &amp; Aesthetic" />
+    <meta
+      property="og:description"
+      content="Where Beauty Meets Art. A refined beauty experience in Rewari."
+    />
+    <meta property="og:image" content="/media/hero-poster.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!--
+      Every face the site uses (eight files, 259 KB, latin subset), fetched
+      before the stylesheet asks for them so the page is laid out ONCE, with
+      the real fonts. A face arriving after first layout re-measures every
+      text node on the page, and on a phone that reflow was the longest task
+      of the whole load. See src/styles/fonts.css.
+    -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-300.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-300-italic.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-400-italic.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cormorant-garamond-500.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/manrope-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/manrope-500.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/manrope-600.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/jost-300.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/jost-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/jost-500.woff2" crossorigin />
+
+    <!--
+      First thing on screen: the hero film's own first frame, one per edit.
+      `media` keeps a phone from fetching the 1080p plate and vice versa.
+    -->
+    <link rel="preload" as="image" href="/media/hero-poster.jpg" media="(min-width: 901px)" />
+    <link rel="preload" as="image" href="/media/hero-poster-mobile.jpg" media="(max-width: 900px)" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BeautySalon",
+        "name": "Cut N Curl",
+        "alternateName": "Cut 'N' Curl Salon & Aesthetic",
+        "slogan": "Where Beauty Meets Art",
+        "foundingDate": "2016",
+        "image": "/media/hero-poster.jpg",
+        "logo": "/media/logo-badge.png",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "281/L, Model Town",
+          "addressLocality": "Rewari",
+          "addressRegion": "Haryana",
+          "postalCode": "123401",
+          "addressCountry": "IN"
+        },
+        "priceRange": "₹₹",
+        "telephone": "+91-70158-05946",
+        "email": "cutncurlsalonrewari@gmail.com",
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "09:00",
+          "closes": "22:00"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="font-family: Georgia, serif; padding: 3rem; text-align: center">
+        <h1>Cut N Curl — Salon &amp; Aesthetic</h1>
+        <p>281/L, Model Town, Rewari, Haryana</p>
+        <p>Please enable JavaScript to explore the salon.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
